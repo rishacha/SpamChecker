@@ -5,7 +5,7 @@ import spam.Trainer;
 import java.io.File;
 import java.io.IOException;
 
-public class Loader {
+class Loader {
 //C:\Users\Jasmin2332\IdeaProjects\SideProject\trainingdata.txt
 
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class Loader {
             e.printStackTrace();
         }
     }
-    public static void load(String folderPath) throws IOException {
+    private static void load(String folderPath) throws IOException {
         System.out.println("load");
         File mSpamFolder = new File(folderPath+"\\spam");
         File mHamFolder = new File(folderPath+"\\ham");

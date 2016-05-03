@@ -24,7 +24,7 @@ class Tokenizer {
                     char[] line = mLine.toCharArray();
                     for (int i = 0, lineLength = line.length; i < lineLength; i++) {
                         char next = line[i];
-                        if (next == ' ') {
+                        if (!Character.isAlphabetic(next)) {
                             if (mToken.length() == 1) mToken.setLength(0);
                             if (mToken.length() > 1) {
                                 add(mToken.toString().toLowerCase());
@@ -61,12 +61,6 @@ class Tokenizer {
                 e.printStackTrace();
                 System.exit(-3);
             }
-            StringBuilder temp = new StringBuilder();
-            tokens.forEach(temp::append);
-            tokens.clear();
-            Iterator<String> tokenize = IteratorFactory.tokenize(temp.toString());
-            temp.setLength(0);
-            while (tokenize.hasNext()) tokens.add(tokenize.next());
         }
         else {
             Iterator<String> tokenize = IteratorFactory.tokenize(text);

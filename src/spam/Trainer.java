@@ -36,6 +36,7 @@ public class Trainer {
             mUniqueWords.clear();
             mUniqueWords = null;
             System.gc();
+            System.out.println(mWordCount);
             Matrix termDocMatrix = new OnDiskMatrix(mWordCount, totalFiles);
             int rows = termDocMatrix.rows();
             int columns = termDocMatrix.columns();
@@ -101,7 +102,7 @@ public class Trainer {
                     double v = termDocMatrix.get(i, j);
                     if(v>0.0d) {
                         docNum++;
-                        total += v;
+                        total++;
                     }
                 }
                 writer.print(total + " ");
@@ -110,7 +111,7 @@ public class Trainer {
                     double v = termDocMatrix.get(i, j);
                     if(v>0.0d) {
                         docNum++;
-                        total += v;
+                        total++;
                     }
                 }
                 writerExtra.print(docNum+ " ");

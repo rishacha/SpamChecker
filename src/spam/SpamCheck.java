@@ -48,7 +48,7 @@ public class SpamCheck {
             mReader.close();
             sqSumOut = new BufferedReader(new FileReader(new File(folderPath + "\\elementSqSums.txt")));
             mags = new Scanner(new FileReader(new File(folderPath + "\\elementread.txt")));
-            countVector = MatrixIO.readMatrix(new File(folderPath + "\\wordCount.txt"), MatrixIO.Format.CLUTO_DENSE, Matrix.Type.DENSE_ON_DISK);
+            countVector = MatrixIO.readMatrix(new File(folderPath + "\\wordCountTOP.txt"), MatrixIO.Format.CLUTO_DENSE, Matrix.Type.DENSE_ON_DISK);
             mReader = new BufferedReader(new FileReader(folder.getAbsolutePath() + "\\extras.txt"));
             sender = mReader.readLine().split("\t");
             subject = mReader.readLine().split("\t");
@@ -74,14 +74,13 @@ public class SpamCheck {
         return Arrays.binarySearch(sender, word, Comparator.naturalOrder());
     }
 
-    public String queryNB() {
-        System.out.println(queryFile);
+    private String queryNB() {
+        //System.out.println(queryFile);
         double[] queryVector = new double[0];
         try {
             MailData mailData = mailReader.read(queryFile);
             int indexSender = findPosSender(mailData.getSender());
             if (indexSender > -1 && indexSender < spamHamDivider) {
-                reset();
                 return "Spam";
             }
 
@@ -107,7 +106,7 @@ public class SpamCheck {
 
             for (int i = 0, subjectLength = subject.length; i < subjectLength; i++) {
                 if (subject[i].equals("Empty")) continue;
-                String[] array1 = mTokenizer.tokenize(subject[i], false);
+                String[] array1 = mTokenizer.tokenize(subject[i], true);
                 Collections.addAll(hashSet, array1);
                 for (String subjectToken : subjectTokens) {
                     if (hashSet.contains(subjectToken)) {
@@ -119,9 +118,9 @@ public class SpamCheck {
 
                 index = i;
                 topK.add(new Pair<>(i, dist));
-                System.out.println(Arrays.toString(array1));
-                System.out.println(Arrays.toString(subjectTokens));
-                System.out.println(list.size() + "/" + hashSet.size() + ":" + dist + ":" + similarity);
+                //System.out.println(Arrays.toString(array1));
+                //System.out.println(Arrays.toString(subjectTokens));
+                //System.out.println(list.size() + "/" + hashSet.size() + ":" + dist + ":" + similarity);
                 hashSet.clear();
                 list.clear();
             }
@@ -141,7 +140,6 @@ public class SpamCheck {
                     }
                 }
                 if (spamCount * spamLength > hamCount * hamLength) {
-                    reset();
                     return "Spam";
                 }
             }
@@ -153,16 +151,17 @@ public class SpamCheck {
             Arrays.fill(queryVector, 0.0);
             for (String aMailBody : mailBody) {
                 int indexWord = findPosWord(aMailBody);
-                if (indexWord != -1) {
+                if (indexWord != -1 && (countVector.get(index, 0)!=0.0 || countVector.get(index, 1)!=0.0)) {
                     queryVector[indexWord]++;
                 }
             }
             double spam = 1.0;
             double ham = 1.0;
-            for (int i = 0; i < queryVector.length; i++) {
+            for (int i = 0; i < countVector.rows(); i++) {
                 if(queryVector[i]!=0.0) {
-                    System.out.println("S: " + countVector.get(i, 0) / ((countVector.get(i, 0) + countVector.get(i, 1))));
-                    System.out.println("H: " + countVector.get(i, 1) / ((countVector.get(i, 0) + countVector.get(i, 1))));
+                    //System.out.println(words[i]);
+                    //System.out.println("S: " + countVector.get(i, 0));
+                    //System.out.println("H: " + countVector.get(i, 1));
                     if(countVector.get(i, 0) != 0.0)
                         spam *= countVector.get(i, 0)/((countVector.get(i, 0)+countVector.get(i, 1)));
                     if(countVector.get(i, 1) != 0.0)
@@ -170,8 +169,8 @@ public class SpamCheck {
                 }
             }
             if(spam > ham) return "Spam";
-            System.out.println(spam);
-            System.out.println(ham);
+            //System.out.println(spam);
+            //System.out.println(ham);
             //
         } catch (Exception e) {
             return "Error";
@@ -179,15 +178,14 @@ public class SpamCheck {
         return "Ham";
     }
 
-    public String querySVD() {
-        System.out.println(queryFile);
+    private String querySVD() {
+        //System.out.println(queryFile);
         double[] vector = new double[0];
         double[] queryVector = new double[0];
         try {
             MailData mailData = mailReader.read(queryFile);
             int indexSender = findPosSender(mailData.getSender());
             if (indexSender > -1 && indexSender < spamHamDivider) {
-                reset();
                 return "Spam";
             }
 
@@ -225,13 +223,13 @@ public class SpamCheck {
 
                 index = i;
                 topK.add(new Pair<>(i, dist));
-                System.out.println(Arrays.toString(array1));
-                System.out.println(Arrays.toString(subjectTokens));
-                System.out.println(list.size() + "/" + hashSet.size() + ":" + dist + ":" + similarity);
+                //System.out.println(Arrays.toString(array1));
+                //System.out.println(Arrays.toString(subjectTokens));
+                //System.out.println(list.size() + "/" + hashSet.size() + ":" + dist + ":" + similarity);
                 hashSet.clear();
                 list.clear();
             }
-            System.out.println(index);
+            //System.out.println(index);
             double spamLength = 0.0;
             double hamLength = 0.0;
             if (index > -1) {
@@ -246,10 +244,9 @@ public class SpamCheck {
                         hamLength += integerDoublePair.getValue();
                     }
                 }
-                System.out.println(spamCount * spamLength);
-                System.out.println(hamCount * hamLength);
+                //System.out.println(spamCount * spamLength);
+                //System.out.println(hamCount * hamLength);
                 if (spamCount * spamLength > hamCount * hamLength) {
-                    reset();
                     return "Spam";
                 }
             }
@@ -281,12 +278,12 @@ public class SpamCheck {
                     res = res + queryVector[j] * vector[j];
                 }
                 res = res / (magnitude * mags.nextDouble());
-                System.out.println(i + " : " + res);
+                //System.out.println(i + " : " + res);
                 index = i;
                 topK.add(new Pair<>(i, res));
                 res = 0.0;
             }
-            System.out.println(index);
+            //System.out.println(index);
             spamCount = 0;
             hamCount = 0;
             spamLength = 0;
@@ -303,21 +300,14 @@ public class SpamCheck {
                         hamLength += integerDoublePair.getValue();
                     }
                 }
-                System.out.println(spamCount * spamLength);
-                System.out.println(hamCount * hamLength);
                 if (spamCount * spamLength > hamCount * hamLength) {
-                    reset();
                     return "Spam";
                 }
                 topK.clear();
             }
         } catch (Exception e) {
-            reset();
-            System.out.println(queryVector.length);
-            System.out.println(vector.length);
-
+            return "Error";
         }
-        reset();
         return "Ham";
     }
 
@@ -333,6 +323,7 @@ public class SpamCheck {
     public void run() {
         if(mode) result = queryNB();
         else result = querySVD();
+        reset();
     }
 
     public void setQueryFile(File queryFile) {

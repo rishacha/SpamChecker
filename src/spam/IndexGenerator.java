@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Jasmin2332 on 4/23/2016.
  */
-public class IndexGenerator {
+class IndexGenerator {
     void generateIndex(String path) {
         try {
             File[] spam = new File(path+"\\spam").listFiles(File::isFile);

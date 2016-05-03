@@ -12,7 +12,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 /**
  * Created by Jasmin2332 on 4/17/2016.
  */
-public class Sorter {
+class Sorter {
 
     Sorter(String path) throws IOException {
         File mFolder = new File(path);

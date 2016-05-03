@@ -15,9 +15,9 @@ import java.util.Properties;
 /**
  * Created by Jasmin2332 on 4/18/2016.
  */
-public class MailReader {
+class MailReader {
 
-    Tokenizer mTokenizer;
+    private Tokenizer mTokenizer;
 
     public MailReader() {
         mTokenizer = new Tokenizer();
