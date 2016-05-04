@@ -19,11 +19,11 @@ class MailReader {
 
     private Tokenizer mTokenizer;
 
-    public MailReader() {
-        mTokenizer = new Tokenizer();
+    MailReader(File folder) {
+        mTokenizer = new Tokenizer(folder);
     }
 
-    public MailData read (File file) throws Exception {
+    MailData read(File file) throws Exception {
         InputStream mailFileInputStream = new FileInputStream(file);
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);

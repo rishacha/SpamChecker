@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Jasmin2332 on 4/19/2016.
  */
-class Indexer {
+public class Indexer {
     public Indexer(String path) throws FileNotFoundException {
         File[] spam = new File(path+"\\spam").listFiles(File::isFile);
         File[] ham = new File(path+"\\ham").listFiles(File::isFile);

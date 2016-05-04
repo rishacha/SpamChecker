@@ -15,12 +15,14 @@ import java.util.*;
 public class Trainer {
     private File[] spamFiles;
     private File[] hamFiles;
+    private String folder;
     private String[] words;
     private List<String> mUniqueWords = new ArrayList<>();
 
-    public Trainer(File[] spamFiles, File[] hamFiles) {
+    public Trainer(File[] spamFiles, File[] hamFiles, String folder) {
         this.spamFiles = spamFiles;
         this.hamFiles = hamFiles;
+        this.folder = folder;
     }
 
     public void train() {
@@ -46,7 +48,7 @@ public class Trainer {
                 }
             }
 
-            MailReader mMailReader = new MailReader();
+            MailReader mMailReader = new MailReader(new File(folder));
             MailData mailData;
             int k=0;
             for (int i = 0, spamFilesLength = spamFiles.length; i < spamFilesLength; i++) {
@@ -160,7 +162,7 @@ public class Trainer {
     }
 
     private void getUniqueWords(File[] files) {
-        MailReader mMailReader = new MailReader();
+        MailReader mMailReader = new MailReader(new File(folder));
         for (File file : files) {
             try {
                 String[] tokens = mMailReader.read(file).getTokens();

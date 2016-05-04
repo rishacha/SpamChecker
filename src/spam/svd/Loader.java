@@ -1,17 +1,17 @@
 package spam.svd;
 
+import spam.Indexer;
+import spam.Sorter;
 import spam.Trainer;
 
 import java.io.File;
 import java.io.IOException;
 
 class Loader {
-//C:\Users\Jasmin2332\IdeaProjects\SideProject\trainingdata.txt
-
     public static void main(String[] args) {
         try {
-            //new Sorter("C:\\Users\\Jasmin2332\\Downloads\\MC\\trec07p\\trec07p\\trec07p\\data");
-            //new Indexer("C:\\Users\\Jasmin2332\\Downloads\\MC\\trec07p\\trec07p\\trec07p\\data");
+            new Sorter("C:\\Users\\Jasmin2332\\Downloads\\MC\\trec07p\\trec07p\\trec07p\\data");
+            new Indexer("C:\\Users\\Jasmin2332\\Downloads\\MC\\trec07p\\trec07p\\trec07p\\data");
             load("C:\\Users\\Jasmin2332\\Downloads\\MC\\trec07p\\trec07p\\trec07p\\data");
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,10 +28,8 @@ class Loader {
         File[] mHamFiles = mHamFolder.listFiles(File::isFile);
         System.out.println("start");
         System.out.println("Trainer");
-        Trainer mTrainer = new Trainer(mSpamFiles, mHamFiles);
+        Trainer mTrainer = new Trainer(mSpamFiles, mHamFiles, folderPath);
         mTrainer.train();
-        mSpamFiles = null;
-        mHamFiles = null;
         System.gc();
     }
 }

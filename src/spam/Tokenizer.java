@@ -2,6 +2,7 @@ package spam;
 
 import edu.ucla.sspace.text.IteratorFactory;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -10,9 +11,13 @@ import java.util.*;
 class Tokenizer {
     private List<String> tokens;
     private List<String> stopWords;
-    Tokenizer() {
+    Tokenizer(File folder) {
         tokens = new ArrayList<>();
         stopWords = new ArrayList<>();
+        Scanner reader = new Scanner(folder.getAbsolutePath()+"\\stopwords.txt");
+        while(reader.hasNext()) {
+            stopWords.add(reader.nextLine());
+        }
     }
     String[] tokenize(String text, boolean words) {
         if(text.equals("")) return new String[] {""};
@@ -79,7 +84,7 @@ class Tokenizer {
     private void add(String token) {
         if(token.length()!=1) {
             if(!isStopWord(token))
-            tokens.add(token);
+                tokens.add(token);
         }
     }
 

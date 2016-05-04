@@ -38,8 +38,8 @@ public class SpamCheck {
 
     public boolean load() {
         try {
-            mTokenizer = new Tokenizer();
-            mailReader = new MailReader();
+            mTokenizer = new Tokenizer(new File(folderPath));
+            mailReader = new MailReader(new File(folderPath));
             BufferedReader mReader = new BufferedReader(new FileReader(folderPath + "\\words.txt"));
             String file = mReader.readLine();
             words = file.split(" ");
@@ -76,7 +76,7 @@ public class SpamCheck {
 
     private String queryNB() {
         //System.out.println(queryFile);
-        double[] queryVector = new double[0];
+        double[] queryVector;
         try {
             MailData mailData = mailReader.read(queryFile);
             int indexSender = findPosSender(mailData.getSender());
@@ -90,7 +90,6 @@ public class SpamCheck {
             HashSet<String> hashSet = new HashSet<>();
             List<String> list = new ArrayList<>();  // Contains the intersection
 
-            double similarity = 0.0;
             int index = -1;
             double dist;
             int spamCount = 0;
@@ -118,9 +117,6 @@ public class SpamCheck {
 
                 index = i;
                 topK.add(new Pair<>(i, dist));
-                //System.out.println(Arrays.toString(array1));
-                //System.out.println(Arrays.toString(subjectTokens));
-                //System.out.println(list.size() + "/" + hashSet.size() + ":" + dist + ":" + similarity);
                 hashSet.clear();
                 list.clear();
             }
@@ -180,8 +176,8 @@ public class SpamCheck {
 
     private String querySVD() {
         //System.out.println(queryFile);
-        double[] vector = new double[0];
-        double[] queryVector = new double[0];
+        double[] vector;
+        double[] queryVector;
         try {
             MailData mailData = mailReader.read(queryFile);
             int indexSender = findPosSender(mailData.getSender());
@@ -195,7 +191,6 @@ public class SpamCheck {
             HashSet<String> hashSet = new HashSet<>();
             List<String> list = new ArrayList<>();  // Contains the intersection
 
-            double similarity = 0.0;
             int index = -1;
             double dist;
             int spamCount = 0;

@@ -12,12 +12,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 /**
  * Created by Jasmin2332 on 4/17/2016.
  */
-class Sorter {
+public class Sorter {
 
-    Sorter(String path) throws IOException {
+    public Sorter(String path) throws IOException {
         File mFolder = new File(path);
         if(mFolder.isDirectory()) {
-            Path mFolderPath = mFolder.toPath();
             File index = new File(path+"\\index.txt");
             if(index.isFile()) {
                 System.out.println(new File(path + "\\ham").mkdirs());
